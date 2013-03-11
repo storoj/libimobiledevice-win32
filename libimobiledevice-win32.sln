@@ -1,0 +1,89 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "getopt", "getopt\getopt.vcxproj", "{1C06E1E0-3FF7-4DAF-A9BA-7C8E2FA11B03}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcnary", "libcnary\libcnary.vcxproj", "{69CDCB06-C62E-45F6-9E2B-4313C228F957}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libgen", "libgen\libgen.vcxproj", "{3E2B717A-7A6F-4FF5-9025-738968045272}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libplist", "libplist\libplist.vcxproj", "{C2FC6AFF-553B-4B8F-8158-93D8D50A8C02}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libusbmuxd", "libusbmuxd\libusbmuxd.vcxproj", "{53034340-F651-4ACB-8FEF-FFE0FF7AA013}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1C06E1E0-3FF7-4DAF-A9BA-7C8E2FA11B03} = {1C06E1E0-3FF7-4DAF-A9BA-7C8E2FA11B03}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libimobiledevice", "libimobiledevice\libimobiledevice.vcxproj", "{6F26C69D-46EE-40AE-92E3-CD205B2C18E0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{53034340-F651-4ACB-8FEF-FFE0FF7AA013} = {53034340-F651-4ACB-8FEF-FFE0FF7AA013}
+		{3E2B717A-7A6F-4FF5-9025-738968045272} = {3E2B717A-7A6F-4FF5-9025-738968045272}
+		{1C06E1E0-3FF7-4DAF-A9BA-7C8E2FA11B03} = {1C06E1E0-3FF7-4DAF-A9BA-7C8E2FA11B03}
+		{C2FC6AFF-553B-4B8F-8158-93D8D50A8C02} = {C2FC6AFF-553B-4B8F-8158-93D8D50A8C02}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libimobiledevice-tools", "libimobiledevice-tools", "{054378B1-3FE2-4586-A94C-11424D95C913}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "idevice_id", "libimobiledevice-tools\idevice_id\idevice_id.vcxproj", "{03771672-451C-4DF8-B6BE-290B0B8D2D51}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6F26C69D-46EE-40AE-92E3-CD205B2C18E0} = {6F26C69D-46EE-40AE-92E3-CD205B2C18E0}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libcompat", "libcompat\libcompat.vcxproj", "{AA5715E5-75AA-4CCC-A3D7-819FC833603C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ideviceinfo", "libimobiledevice-tools\ideviceinfo\ideviceinfo.vcxproj", "{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6F26C69D-46EE-40AE-92E3-CD205B2C18E0} = {6F26C69D-46EE-40AE-92E3-CD205B2C18E0}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1C06E1E0-3FF7-4DAF-A9BA-7C8E2FA11B03}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1C06E1E0-3FF7-4DAF-A9BA-7C8E2FA11B03}.Debug|Win32.Build.0 = Debug|Win32
+		{1C06E1E0-3FF7-4DAF-A9BA-7C8E2FA11B03}.Release|Win32.ActiveCfg = Release|Win32
+		{1C06E1E0-3FF7-4DAF-A9BA-7C8E2FA11B03}.Release|Win32.Build.0 = Release|Win32
+		{69CDCB06-C62E-45F6-9E2B-4313C228F957}.Debug|Win32.ActiveCfg = Debug|Win32
+		{69CDCB06-C62E-45F6-9E2B-4313C228F957}.Debug|Win32.Build.0 = Debug|Win32
+		{69CDCB06-C62E-45F6-9E2B-4313C228F957}.Release|Win32.ActiveCfg = Release|Win32
+		{69CDCB06-C62E-45F6-9E2B-4313C228F957}.Release|Win32.Build.0 = Release|Win32
+		{3E2B717A-7A6F-4FF5-9025-738968045272}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3E2B717A-7A6F-4FF5-9025-738968045272}.Debug|Win32.Build.0 = Debug|Win32
+		{3E2B717A-7A6F-4FF5-9025-738968045272}.Release|Win32.ActiveCfg = Release|Win32
+		{3E2B717A-7A6F-4FF5-9025-738968045272}.Release|Win32.Build.0 = Release|Win32
+		{C2FC6AFF-553B-4B8F-8158-93D8D50A8C02}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C2FC6AFF-553B-4B8F-8158-93D8D50A8C02}.Debug|Win32.Build.0 = Debug|Win32
+		{C2FC6AFF-553B-4B8F-8158-93D8D50A8C02}.Release|Win32.ActiveCfg = Release|Win32
+		{C2FC6AFF-553B-4B8F-8158-93D8D50A8C02}.Release|Win32.Build.0 = Release|Win32
+		{53034340-F651-4ACB-8FEF-FFE0FF7AA013}.Debug|Win32.ActiveCfg = Debug|Win32
+		{53034340-F651-4ACB-8FEF-FFE0FF7AA013}.Debug|Win32.Build.0 = Debug|Win32
+		{53034340-F651-4ACB-8FEF-FFE0FF7AA013}.Release|Win32.ActiveCfg = Release|Win32
+		{53034340-F651-4ACB-8FEF-FFE0FF7AA013}.Release|Win32.Build.0 = Release|Win32
+		{6F26C69D-46EE-40AE-92E3-CD205B2C18E0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6F26C69D-46EE-40AE-92E3-CD205B2C18E0}.Debug|Win32.Build.0 = Debug|Win32
+		{6F26C69D-46EE-40AE-92E3-CD205B2C18E0}.Release|Win32.ActiveCfg = Release|Win32
+		{6F26C69D-46EE-40AE-92E3-CD205B2C18E0}.Release|Win32.Build.0 = Release|Win32
+		{03771672-451C-4DF8-B6BE-290B0B8D2D51}.Debug|Win32.ActiveCfg = Debug|Win32
+		{03771672-451C-4DF8-B6BE-290B0B8D2D51}.Debug|Win32.Build.0 = Debug|Win32
+		{03771672-451C-4DF8-B6BE-290B0B8D2D51}.Release|Win32.ActiveCfg = Release|Win32
+		{03771672-451C-4DF8-B6BE-290B0B8D2D51}.Release|Win32.Build.0 = Release|Win32
+		{AA5715E5-75AA-4CCC-A3D7-819FC833603C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AA5715E5-75AA-4CCC-A3D7-819FC833603C}.Debug|Win32.Build.0 = Debug|Win32
+		{AA5715E5-75AA-4CCC-A3D7-819FC833603C}.Release|Win32.ActiveCfg = Release|Win32
+		{AA5715E5-75AA-4CCC-A3D7-819FC833603C}.Release|Win32.Build.0 = Release|Win32
+		{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7}.Debug|Win32.Build.0 = Debug|Win32
+		{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7}.Release|Win32.ActiveCfg = Release|Win32
+		{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{03771672-451C-4DF8-B6BE-290B0B8D2D51} = {054378B1-3FE2-4586-A94C-11424D95C913}
+		{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7} = {054378B1-3FE2-4586-A94C-11424D95C913}
+	EndGlobalSection
+EndGlobal
