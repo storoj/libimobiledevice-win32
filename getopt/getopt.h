@@ -1,25 +1,33 @@
-﻿// XGetopt.h  Version 1.2
-//
-// Author:  Hans Dietrich
-//          hdietrich2@hotmail.com
-//
-// This software is released into the public domain.
-// You are free to use it in any way you like.
-//
-// This software is provided "as is" with no expressed
-// or implied warranty.  I accept no liability for any
-// damage or loss of business that this software may cause.
-//
-///////////////////////////////////////////////////////////////////////////////
+#ifndef __GETOPT_H__
+#define __GETOPT_H__
 
-#ifndef XGETOPT_H
-#define XGETOPT_H
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-typedef wchar_t TCHAR;
+extern int opterr;		/* if error message should be printed */
+extern int optind;		/* index into parent argv vector */
+extern int optopt;		/* character checked for validity */
+extern int optreset;		/* reset getopt */
+extern char *optarg;		/* argument associated with option */
 
-extern int optind, opterr;
-extern TCHAR *optarg;
+struct option
+{
+  const char *name;
+  int has_arg;
+  int *flag;
+  int val;
+};
 
-int getopt(int argc, char *argv[], char *optstring);
+#define no_argument       0
+#define required_argument 1
+#define optional_argument 2
 
-#endif //XGETOPT_H
+int getopt(int, char**, char*);
+int getopt_long(int, char**, char*, struct option*, int*);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __GETOPT_H__ */

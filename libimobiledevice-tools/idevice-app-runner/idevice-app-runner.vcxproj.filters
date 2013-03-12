@@ -11,15 +11,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="getopt.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="getopt_long.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="getopt.c">
+    <ClCompile Include="idevice-app-runner.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
