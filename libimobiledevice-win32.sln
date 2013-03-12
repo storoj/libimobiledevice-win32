@@ -36,6 +36,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ideviceinfo", "libimobilede
 		{6F26C69D-46EE-40AE-92E3-CD205B2C18E0} = {6F26C69D-46EE-40AE-92E3-CD205B2C18E0}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "idevicescreenshot", "libimobiledevice-tools\idevicescreenshot\idevicescreenshot.vcxproj", "{C8530E36-B249-4F97-938D-AC016AAB9CC1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6F26C69D-46EE-40AE-92E3-CD205B2C18E0} = {6F26C69D-46EE-40AE-92E3-CD205B2C18E0}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -78,6 +83,10 @@ Global
 		{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7}.Debug|Win32.Build.0 = Debug|Win32
 		{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7}.Release|Win32.ActiveCfg = Release|Win32
 		{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7}.Release|Win32.Build.0 = Release|Win32
+		{C8530E36-B249-4F97-938D-AC016AAB9CC1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C8530E36-B249-4F97-938D-AC016AAB9CC1}.Debug|Win32.Build.0 = Debug|Win32
+		{C8530E36-B249-4F97-938D-AC016AAB9CC1}.Release|Win32.ActiveCfg = Release|Win32
+		{C8530E36-B249-4F97-938D-AC016AAB9CC1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,5 +94,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{03771672-451C-4DF8-B6BE-290B0B8D2D51} = {054378B1-3FE2-4586-A94C-11424D95C913}
 		{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7} = {054378B1-3FE2-4586-A94C-11424D95C913}
+		{C8530E36-B249-4F97-938D-AC016AAB9CC1} = {054378B1-3FE2-4586-A94C-11424D95C913}
 	EndGlobalSection
 EndGlobal
