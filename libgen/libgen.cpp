@@ -41,7 +41,6 @@ memcpy(buffer, path, len-1);
 return buffer;
 }
 /*---------------------------------------------------------------------------*/
-static
 char *basename(char *path)
 {
 static char buffer[260];
@@ -72,7 +71,6 @@ memcpy(buffer, path + len, len_start - len);
 return buffer;
 }
 /*---------------------------------------------------------------------------*/
-static
 char *realpath(const char *path, char *resolved_path)
 {
 char *pszFilePart;

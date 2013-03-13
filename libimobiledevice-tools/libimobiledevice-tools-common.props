@@ -5,7 +5,7 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)\libimobiledevice\include;$(SolutionDir)\vendors\include;$(SolutionDir)\libplist\include;$(SolutionDir)\getopt</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libimobiledevice\include;$(SolutionDir)\vendors\include;$(SolutionDir)\libplist\include;$(SolutionDir)\getopt;$(SolutionDir)\libgen</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalDependencies>libimobiledevice.lib;libplist.lib;libusbmuxd.lib;libgcc.a;ws2_32.lib;zlib.lib;libcompat.lib;getopt.lib;libgen.lib;libcnary.lib;iconv.lib;libxml2.lib;libssl.a;libcrypto.a;%(AdditionalDependencies)</AdditionalDependencies>

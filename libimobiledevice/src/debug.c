@@ -101,7 +101,7 @@ inline void debug_info_real(const char *func, const char *file, int line, const 
 #endif
 }
 
-inline void debug_buffer(const char *data, const int length)
+void debug_buffer(const char *data, const int length)
 {
 #ifndef STRIP_DEBUG_CODE
 	int i;
