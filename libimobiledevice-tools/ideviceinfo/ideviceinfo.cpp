@@ -23,7 +23,6 @@
 #include <string.h>
 #include <errno.h>
 #include <stdlib.h>
-#include <time.h>
 
 #ifdef WIN32
 # include <time.h>

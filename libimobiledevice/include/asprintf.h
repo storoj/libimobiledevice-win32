@@ -9,8 +9,8 @@
 static inline int vasprintf(char **PTR, const char *TEMPLATE, va_list AP)
 {
 	int res;
-	char buf[16];
-	res = vsnprintf(buf, 16, TEMPLATE, AP);
+	char buf[16000];
+	res = vsnprintf(buf, 16000, TEMPLATE, AP);
 	if (res > 0) {
 		*PTR = (char*)malloc(res+1);
 		res = vsnprintf(*PTR, res+1, TEMPLATE, AP);
