@@ -302,7 +302,7 @@ int main(int argc, char **argv)
     char** cmd = cmds;
     while (*cmd && !quit_flag) {
         printf("'%s'\n", *cmd);
-        sleep(2);
+        sleep(1);
         send_pkt(*cmd, connection);
         recv_pkt(connection);
         recv_pkt(connection);

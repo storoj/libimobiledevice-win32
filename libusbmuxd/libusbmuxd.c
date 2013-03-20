@@ -71,11 +71,90 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 // misc utility functions
 #include "utils.h"
 
-static int libusbmuxd_debug = 100;
+#ifndef DEBUG_DATA
+# define DEBUG_DATA 0
+#endif
+
+#ifndef DEBUG_DATA_HEX
+# define DEBUG_DATA_HEX 1
+#endif
+
+static int libusbmuxd_debug = DEBUG_DATA;
 #ifndef __func__
 # define __func__ __FUNCTION__
 #endif
-#define DEBUG(x, y, ...) if (x <= libusbmuxd_debug) fprintf(stderr, (y), __VA_ARGS__);
+#define DEBUG(x, y, ...) if (x <= libusbmuxd_debug) fprintf(stderr, (y), __VA_ARGS__); fflush(stderr);
+
+#if DEBUG_DATA
+
+#define DEBUG_DATA_HEX_WIDTH 30
+
+static char tohex(int x)
+{
+    static char* hexchars = "0123456789ABCDEF";
+    return hexchars[x];
+}
+
+static unsigned int fromhex(char c)
+{
+    if (c >= '0' && c <= '9')
+        return c - '0';
+    else if (c >= 'a' && c <= 'f')
+        return 10 + c - 'a';
+    else if (c >= 'A' && c <= 'F')
+        return 10 + c - 'A';
+    return 0;
+}
+
+static char *hex2strn(const char *data, const int len)
+{
+	if (len == 0) {
+		return NULL;
+	}
+	int i, j;
+	int result_len = len/2 + 1;
+
+	char *result = (char *)malloc((result_len + 1) * sizeof(char));
+
+	for (i=0, j=0; i<len; i+=2) {
+		result[j++] = fromhex(data[i]) << 4 | fromhex(data[i+1]);
+	}
+	result[j] = 0x00;
+	return result;
+}
+
+static char *str2hexn(const char *data, const int len)
+{
+	if (len == 0) {
+		return NULL;
+	}
+	int i, j;
+	int new_lines_count = len / DEBUG_DATA_HEX_WIDTH;
+	int result_len = len * 2 + new_lines_count;
+	char *result = (char *)malloc((result_len + 1) * sizeof(char));
+
+	for (i=0, j=0; i<len; i++) {
+		result[j++] = tohex((data[i]&0xf0)>>4);
+		result[j++] = tohex(data[i]&0x0f);
+		if (i > 0 && i % DEBUG_DATA_HEX_WIDTH == 0) {
+			result[j++] = 0xa;
+		}
+	}
+	result[j] = 0x00;
+	return result;
+}
+
+static char *hex2str(const char *data)
+{
+	return hex2strn(data, strlen(data));
+}
+
+static char *str2hex(const char *data)
+{
+	return str2hexn(data, strlen(data));
+}
+
+#endif
 
 static struct collection devices;
 static usbmuxd_event_cb_t event_cb = NULL;
@@ -928,6 +1007,20 @@ int usbmuxd_send(int sfd, const char *data, uint32_t len, uint32_t *sent_bytes)
 		return -EINVAL;
 	}
 	
+#if DEBUG_DATA
+	char *tmp = NULL;
+	if (DEBUG_DATA_HEX && len > 0 && *data != '<') {
+		tmp = str2hexn(data, len);
+	} else {
+		// plist here, show as text
+		tmp = (char *)malloc(len * sizeof(char));
+		strncpy(tmp, data, len * sizeof(char));
+	}
+
+	DEBUG(1, "\n======================\nsending: %s\n======================\n\n", tmp);
+	free(tmp);
+#endif
+
 	num_sent = send(sfd, (const char *)(void*)data, len, 0);
 	if (num_sent < 0) {
 		*sent_bytes = 0;
@@ -945,10 +1038,24 @@ int usbmuxd_send(int sfd, const char *data, uint32_t len, uint32_t *sent_bytes)
 int usbmuxd_recv_timeout(int sfd, char *data, uint32_t len, uint32_t *recv_bytes, unsigned int timeout)
 {
 	int num_recv = recv_buf_timeout(sfd, (void*)data, len, 0, timeout);
+
 	if (num_recv < 0) {
 		*recv_bytes = 0;
 		return num_recv;
 	}
+
+#if DEBUG_DATA
+	char *tmp = NULL;
+	if (DEBUG_DATA_HEX && len > 0 && *data != '<') {
+		tmp = str2hexn(data, len);
+	} else {
+		// plist here, show as text
+		tmp = (char *)malloc(len * sizeof(char));
+		strncpy(tmp, data, len * sizeof(char));
+	}
+	DEBUG(1, "\n======================\nreceived: %s\n======================\n\n", tmp);
+	free(tmp);
+#endif
 
 	*recv_bytes = num_recv;
 

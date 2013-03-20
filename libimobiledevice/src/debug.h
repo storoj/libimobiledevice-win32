@@ -42,7 +42,12 @@
 #else
 #include <stdio.h>
 #define __func__ __FUNCTION__
-#define debug_info(...) printf(##__VA_ARGS__); printf("\n")
+
+#if DEBUG_DATA
+# define debug_info(...) printf(##__VA_ARGS__); printf("\n"); fflush(stdout);
+#else
+# define debug_info(...)
+#endif
 
 #define debug_plist(a)
 #endif

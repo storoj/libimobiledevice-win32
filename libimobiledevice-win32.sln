@@ -58,12 +58,25 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ideviceprovision", "libimob
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "idevice-app-runner", "libimobiledevice-tools\idevice-app-runner\idevice-app-runner.vcxproj", "{6368BADB-C660-4B6A-B986-541EF3C0B9B1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{53034340-F651-4ACB-8FEF-FFE0FF7AA013} = {53034340-F651-4ACB-8FEF-FFE0FF7AA013}
+		{6F26C69D-46EE-40AE-92E3-CD205B2C18E0} = {6F26C69D-46EE-40AE-92E3-CD205B2C18E0}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ideviceinstaller", "libimobiledevice-tools\ideviceinstaller\ideviceinstaller.vcxproj", "{00AB62FF-DC93-4B81-B4FE-E3229DC44D91}"
+	ProjectSection(ProjectDependencies) = postProject
+		{53034340-F651-4ACB-8FEF-FFE0FF7AA013} = {53034340-F651-4ACB-8FEF-FFE0FF7AA013}
+		{6F26C69D-46EE-40AE-92E3-CD205B2C18E0} = {6F26C69D-46EE-40AE-92E3-CD205B2C18E0}
+		{C2FC6AFF-553B-4B8F-8158-93D8D50A8C02} = {C2FC6AFF-553B-4B8F-8158-93D8D50A8C02}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libzip", "libzip\libzip.vcxproj", "{CA9DE663-102C-4953-B09E-BCFFEC17D7E4}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ideviceimagemounter", "libimobiledevice-tools\ideviceimagemounter\ideviceimagemounter.vcxproj", "{4AF01887-F20F-4E90-B5DE-48168D60E6BC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{53034340-F651-4ACB-8FEF-FFE0FF7AA013} = {53034340-F651-4ACB-8FEF-FFE0FF7AA013}
+		{6F26C69D-46EE-40AE-92E3-CD205B2C18E0} = {6F26C69D-46EE-40AE-92E3-CD205B2C18E0}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
