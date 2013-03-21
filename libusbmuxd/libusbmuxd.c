@@ -1008,17 +1008,21 @@ int usbmuxd_send(int sfd, const char *data, uint32_t len, uint32_t *sent_bytes)
 	}
 	
 #if DEBUG_DATA
-	char *tmp = NULL;
-	if (DEBUG_DATA_HEX && len > 0 && *data != '<') {
-		tmp = str2hexn(data, len);
-	} else {
-		// plist here, show as text
-		tmp = (char *)malloc(len * sizeof(char));
-		strncpy(tmp, data, len * sizeof(char));
+	if (len > 0) {
+		char *tmp = NULL;
+		if (DEBUG_DATA_HEX && *data != '<') {
+			tmp = str2hexn(data, len);
+		} else {
+			// plist here, show as text
+			tmp = (char *)malloc((len+1) * sizeof(char));
+			strncpy(tmp, data, len * sizeof(char));
+			tmp[len] = 0x00;
+		}
+
+		DEBUG(1, "\n======================\nsending: %d bytes:\n%s\n======================\n\n", len, tmp);
+		free(tmp);
 	}
 
-	DEBUG(1, "\n======================\nsending: %s\n======================\n\n", tmp);
-	free(tmp);
 #endif
 
 	num_sent = send(sfd, (const char *)(void*)data, len, 0);
@@ -1045,16 +1049,19 @@ int usbmuxd_recv_timeout(int sfd, char *data, uint32_t len, uint32_t *recv_bytes
 	}
 
 #if DEBUG_DATA
-	char *tmp = NULL;
-	if (DEBUG_DATA_HEX && len > 0 && *data != '<') {
-		tmp = str2hexn(data, len);
-	} else {
-		// plist here, show as text
-		tmp = (char *)malloc(len * sizeof(char));
-		strncpy(tmp, data, len * sizeof(char));
+	if (len > 0) {
+		char *tmp = NULL;
+		if (DEBUG_DATA_HEX && *data != '<') {
+			tmp = str2hexn(data, len);
+		} else {
+			// plist here, show as text
+			tmp = (char *)malloc((len+1) * sizeof(char));
+			strncpy(tmp, data, len * sizeof(char));
+			tmp[len] = 0x00;
+		}
+		DEBUG(1, "\n======================\nreceived: %d bytes\n%s\n======================\n\n", len, tmp);
+		free(tmp);
 	}
-	DEBUG(1, "\n======================\nreceived: %s\n======================\n\n", tmp);
-	free(tmp);
 #endif
 
 	*recv_bytes = num_recv;
