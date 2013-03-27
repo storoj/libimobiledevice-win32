@@ -81,12 +81,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ideviceimagemounter", "libi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "idevice-debug-client", "libimobiledevice-tools\idevice-debug-client\idevice-debug-client.vcxproj", "{80E14F4A-9707-4B30-9D63-306756A2E05C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "imobiledeviceapp", "libimobiledevice-tools\imobiledeviceapp\imobiledeviceapp.csproj", "{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}"
-	ProjectSection(ProjectDependencies) = postProject
-		{03771672-451C-4DF8-B6BE-290B0B8D2D51} = {03771672-451C-4DF8-B6BE-290B0B8D2D51}
-		{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7} = {3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -287,16 +281,6 @@ Global
 		{80E14F4A-9707-4B30-9D63-306756A2E05C}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{80E14F4A-9707-4B30-9D63-306756A2E05C}.Release|Win32.ActiveCfg = Release|Win32
 		{80E14F4A-9707-4B30-9D63-306756A2E05C}.Release|Win32.Build.0 = Release|Win32
-		{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -311,6 +295,5 @@ Global
 		{00AB62FF-DC93-4B81-B4FE-E3229DC44D91} = {054378B1-3FE2-4586-A94C-11424D95C913}
 		{4AF01887-F20F-4E90-B5DE-48168D60E6BC} = {054378B1-3FE2-4586-A94C-11424D95C913}
 		{80E14F4A-9707-4B30-9D63-306756A2E05C} = {054378B1-3FE2-4586-A94C-11424D95C913}
-		{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66} = {054378B1-3FE2-4586-A94C-11424D95C913}
 	EndGlobalSection
 EndGlobal
