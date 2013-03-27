@@ -82,6 +82,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "idevice-debug-client", "libimobiledevice-tools\idevice-debug-client\idevice-debug-client.vcxproj", "{80E14F4A-9707-4B30-9D63-306756A2E05C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "imobiledeviceapp", "libimobiledevice-tools\imobiledeviceapp\imobiledeviceapp.csproj", "{B2F015FE-07F5-43AC-B6E6-DF8D0D4ADC66}"
+	ProjectSection(ProjectDependencies) = postProject
+		{03771672-451C-4DF8-B6BE-290B0B8D2D51} = {03771672-451C-4DF8-B6BE-290B0B8D2D51}
+		{3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7} = {3EBC40B2-C7DE-4C9B-9E38-97F79DD3A1D7}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
