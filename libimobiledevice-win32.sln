@@ -81,6 +81,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ideviceimagemounter", "libi
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "idevice-debug-client", "libimobiledevice-tools\idevice-debug-client\idevice-debug-client.vcxproj", "{80E14F4A-9707-4B30-9D63-306756A2E05C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "idevicemobilemanagementtool", "libimobiledevice-tools\idevicemobilemanagementtool\idevicemobilemanagementtool.vcxproj", "{CAE14CBE-3957-4673-BE5F-2E537E620C3F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -281,6 +283,16 @@ Global
 		{80E14F4A-9707-4B30-9D63-306756A2E05C}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{80E14F4A-9707-4B30-9D63-306756A2E05C}.Release|Win32.ActiveCfg = Release|Win32
 		{80E14F4A-9707-4B30-9D63-306756A2E05C}.Release|Win32.Build.0 = Release|Win32
+		{CAE14CBE-3957-4673-BE5F-2E537E620C3F}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{CAE14CBE-3957-4673-BE5F-2E537E620C3F}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{CAE14CBE-3957-4673-BE5F-2E537E620C3F}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{CAE14CBE-3957-4673-BE5F-2E537E620C3F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{CAE14CBE-3957-4673-BE5F-2E537E620C3F}.Debug|Win32.Build.0 = Debug|Win32
+		{CAE14CBE-3957-4673-BE5F-2E537E620C3F}.Release|Any CPU.ActiveCfg = Release|Win32
+		{CAE14CBE-3957-4673-BE5F-2E537E620C3F}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{CAE14CBE-3957-4673-BE5F-2E537E620C3F}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{CAE14CBE-3957-4673-BE5F-2E537E620C3F}.Release|Win32.ActiveCfg = Release|Win32
+		{CAE14CBE-3957-4673-BE5F-2E537E620C3F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -295,5 +307,6 @@ Global
 		{00AB62FF-DC93-4B81-B4FE-E3229DC44D91} = {054378B1-3FE2-4586-A94C-11424D95C913}
 		{4AF01887-F20F-4E90-B5DE-48168D60E6BC} = {054378B1-3FE2-4586-A94C-11424D95C913}
 		{80E14F4A-9707-4B30-9D63-306756A2E05C} = {054378B1-3FE2-4586-A94C-11424D95C913}
+		{CAE14CBE-3957-4673-BE5F-2E537E620C3F} = {054378B1-3FE2-4586-A94C-11424D95C913}
 	EndGlobalSection
 EndGlobal
