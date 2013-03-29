@@ -49,12 +49,6 @@ END_MESSAGE_MAP()
 
 // CDeviceInfoPropertyPage message handlers
 
-
-void CDeviceInfoPropertyPage::OnBnClickedDeviceInfoSubmitButton()
-{
-	
-}
-
 BOOL CDeviceInfoPropertyPage::OnInitDialog()
 {
 	CMFCPropertyPage::OnInitDialog();
@@ -64,27 +58,15 @@ BOOL CDeviceInfoPropertyPage::OnInitDialog()
 	return TRUE;  // return TRUE unless you set the focus to a control
 }
 
+void CDeviceInfoPropertyPage::OnBnClickedDeviceInfoSubmitButton()
+{
+
+}
+
 void CDeviceInfoPropertyPage::FillDeviceIDCombo()
 {
-	UpdateData(FALSE);
-
-	//m_DeviceIDCombo.AddString(_T("Automatic detection"));
-	//m_DeviceIDCombo.SetItemData(0, -1);
-
-	//CDeviceIDProvider deviceIDProvider;
-	//std::vector<CString> *listOfDevices = deviceIDProvider.GetDeviceIDList();
-	//
-	//int index = 0;
-	//for (auto iterator = listOfDevices->cbegin(); iterator != listOfDevices->end(); iterator++) {
-	//	CString value = *iterator;
-
-	//	m_DeviceIDCombo.AddString(value);
-	//	m_DeviceIDCombo.SetItemData(index + 1, index);
-
-	//	index++;
-	//}
-
-	//delete listOfDevices;
-
-	UpdateData(TRUE);
+	CDeviceIDProvider deviceProvider;
+	deviceProvider.FillComboboxWithItems(&m_DeviceIDCombo, false);
+	
+	m_DeviceIDCombo.SetCurSel(0);
 }
