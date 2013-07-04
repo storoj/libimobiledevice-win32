@@ -57,6 +57,10 @@
 #define sleep(x) Sleep(x*1000)
 #endif
 
+#ifndef __func__
+# define __func__ __FUNCTION__
+#endif
+
 static mobilebackup_client_t mobilebackup = NULL;
 static lockdownd_client_t client = NULL;
 static idevice_t device = NULL;
@@ -1040,7 +1044,7 @@ int main(int argc, char *argv[])
 					do_post_notification(NP_SYNC_DID_START);
 					break;
 				} else if (aerr == AFC_E_OP_WOULD_BLOCK) {
-					usleep(LOCK_WAIT);
+					sleep(LOCK_WAIT);
 					continue;
 				} else {
 					fprintf(stderr, "ERROR: could not lock file! error code: %d\n", aerr);
@@ -1064,6 +1068,8 @@ int main(int argc, char *argv[])
 
 		switch(cmd) {
 			case CMD_BACKUP:
+                {
+
 			printf("Starting backup...\n");
 			/* TODO: check domain com.apple.mobile.backup key RequiresEncrypt and WillEncrypt with lockdown */
 			/* TODO: verify battery on AC enough battery remaining */	
@@ -1175,7 +1181,7 @@ int main(int argc, char *argv[])
 				/* check DLFileStatusKey (codes: 1 = Hunk, 2 = Last Hunk) */
 				node = plist_dict_get_item(node_tmp, "DLFileStatusKey");
 				plist_get_uint_val(node, &c);
-				file_status = c;
+				file_status = (device_link_file_status_t)c;
 
 				/* get source filename */
 				node = plist_dict_get_item(node_tmp, "BackupManifestKey");
@@ -1354,8 +1360,10 @@ files_out:
 			} else {
 				printf("Backup Failed.\n");
 			}
+            }
 			break;
 			case CMD_RESTORE:
+                {
 			/* close down the lockdown connection as it is no longer needed */
 			if (client) {
 				lockdownd_client_free(client);
@@ -1461,7 +1469,7 @@ files_out:
 
 			/* request restore from device with manifest (BackupMessageRestoreMigrate) */
 			int restore_flags = MB_RESTORE_NOTIFY_SPRINGBOARD | MB_RESTORE_PRESERVE_SETTINGS | MB_RESTORE_PRESERVE_CAMERA_ROLL;
-			err = mobilebackup_request_restore(mobilebackup, manifest_plist, restore_flags, "1.6");
+			err = mobilebackup_request_restore(mobilebackup, manifest_plist, (mobilebackup_flags_t)restore_flags, "1.6");
 			if (err != MOBILEBACKUP_E_SUCCESS) {
 				if (err == MOBILEBACKUP_E_BAD_VERSION) {
 					printf("ERROR: Could not start restore process: backup protocol version mismatch!\n");
@@ -1685,6 +1693,7 @@ files_out:
 				printf("Restore Failed.\n");
 			}
 			break;
+            }
 			case CMD_LEAVE:
 			default:
 			break;

@@ -1,18 +1,6 @@
 #include "libcompat.h"
-#include <stdio.h>
 #include <time.h>
 #include <windows.h>
-
-int snprintf ( char * s, size_t n, const char * format, ... )
-{
-   va_list args;
-   int result = 0;
-   _crt_va_start(args, format);
-   result = _snprintf(s, n, format, args);
-   _crt_va_end(args);
-
-   return result;
-}
 
 /*
 int __chkstk()

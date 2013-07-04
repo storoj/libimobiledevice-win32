@@ -15,7 +15,10 @@ struct timezone
   int  tz_dsttime;     /* type of dst correction */
 };
 
-int snprintf ( char * s, size_t n, const char * format, ... );
+#ifndef snprintf
+# define snprintf _snprintf
+#endif
+
 int gettimeofday(struct timeval *tv, struct timezone *tz);
 
 #endif LIBCOMPAT_H
