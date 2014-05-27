@@ -61,6 +61,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);HAVE_PLIST;</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)\vendors\include;$(SolutionDir)\getopt;$(SolutionDir)\libplist\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

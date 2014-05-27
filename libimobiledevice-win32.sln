@@ -10,6 +10,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libplist", "libplist\libplist.vcxproj", "{C2FC6AFF-553B-4B8F-8158-93D8D50A8C02}"
 	ProjectSection(ProjectDependencies) = postProject
 		{69CDCB06-C62E-45F6-9E2B-4313C228F957} = {69CDCB06-C62E-45F6-9E2B-4313C228F957}
+		{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C} = {1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libusbmuxd", "libusbmuxd\libusbmuxd.vcxproj", "{53034340-F651-4ACB-8FEF-FFE0FF7AA013}"
@@ -99,6 +100,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "idevicebackup", "libimobile
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "idevicebackup2", "libimobiledevice-tools\idevicebackup2\idevicebackup2.vcxproj", "{98E67352-7104-464C-8774-149B704660A1}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libxml2", "vendors\libxml\libxml2.vcxproj", "{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libiconv", "vendors\libiconv\libiconv.vcxproj", "{0788DB65-CD86-4A0D-A245-F29C0114373B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -330,6 +335,26 @@ Global
 		{98E67352-7104-464C-8774-149B704660A1}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{98E67352-7104-464C-8774-149B704660A1}.Release|Win32.ActiveCfg = Release|Win32
 		{98E67352-7104-464C-8774-149B704660A1}.Release|Win32.Build.0 = Release|Win32
+		{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}.Debug|Win32.Build.0 = Debug|Win32
+		{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}.Release|Any CPU.ActiveCfg = Release|Win32
+		{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}.Release|Win32.ActiveCfg = Release|Win32
+		{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}.Release|Win32.Build.0 = Release|Win32
+		{0788DB65-CD86-4A0D-A245-F29C0114373B}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{0788DB65-CD86-4A0D-A245-F29C0114373B}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{0788DB65-CD86-4A0D-A245-F29C0114373B}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{0788DB65-CD86-4A0D-A245-F29C0114373B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0788DB65-CD86-4A0D-A245-F29C0114373B}.Debug|Win32.Build.0 = Debug|Win32
+		{0788DB65-CD86-4A0D-A245-F29C0114373B}.Release|Any CPU.ActiveCfg = Release|Win32
+		{0788DB65-CD86-4A0D-A245-F29C0114373B}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{0788DB65-CD86-4A0D-A245-F29C0114373B}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{0788DB65-CD86-4A0D-A245-F29C0114373B}.Release|Win32.ActiveCfg = Release|Win32
+		{0788DB65-CD86-4A0D-A245-F29C0114373B}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

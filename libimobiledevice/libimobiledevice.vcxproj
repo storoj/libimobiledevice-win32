@@ -120,6 +120,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);ASN1_STATIC;plist_STATIC;HAVE_OPENSSL;__LITTLE_ENDIAN__</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(ProjectDir)\include;$(SolutionDir)\libplist\include;$(SolutionDir)\vendors\include;$(SolutionDir)\getopt;$(SolutionDir)\libgen;$(SolutionDir)\libusbmuxd;$(SolutionDir)\libcompat;$(SolutionDir)\vendors\openssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

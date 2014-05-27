@@ -1,0 +1,145 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1D6039F6-5078-416F-A3AF-A36EFC7E6A1C}</ProjectGuid>
+    <RootNamespace>libxml2</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IntDir>build\$(ProjectName)$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(TC10Install)\Bin\Extensions\iOS\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)src;$(ProjectDir)include;$(SolutionDir)vendors\libiconv\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <MinimalRebuild>false</MinimalRebuild>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <PreprocessorDefinitions>USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>USING_STATIC_LIBICONV;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)src;$(ProjectDir)include;$(SolutionDir)vendors\libiconv\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996</DisableSpecificWarnings>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\buf.c" />
+    <ClCompile Include="src\c14n.c" />
+    <ClCompile Include="src\catalog.c" />
+    <ClCompile Include="src\chvalid.c" />
+    <ClCompile Include="src\debugXML.c" />
+    <ClCompile Include="src\dict.c" />
+    <ClCompile Include="src\DOCBparser.c" />
+    <ClCompile Include="src\encoding.c" />
+    <ClCompile Include="src\entities.c" />
+    <ClCompile Include="src\error.c" />
+    <ClCompile Include="src\globals.c" />
+    <ClCompile Include="src\hash.c" />
+    <ClCompile Include="src\HTMLparser.c" />
+    <ClCompile Include="src\HTMLtree.c" />
+    <ClCompile Include="src\legacy.c" />
+    <ClCompile Include="src\list.c" />
+    <ClCompile Include="src\nanoftp.c" />
+    <ClCompile Include="src\nanohttp.c" />
+    <ClCompile Include="src\parser.c" />
+    <ClCompile Include="src\parserInternals.c" />
+    <ClCompile Include="src\pattern.c" />
+    <ClCompile Include="src\relaxng.c" />
+    <ClCompile Include="src\SAX.c" />
+    <ClCompile Include="src\SAX2.c" />
+    <ClCompile Include="src\schematron.c" />
+    <ClCompile Include="src\threads.c" />
+    <ClCompile Include="src\tree.c" />
+    <ClCompile Include="src\uri.c" />
+    <ClCompile Include="src\valid.c" />
+    <ClCompile Include="src\xinclude.c" />
+    <ClCompile Include="src\xlink.c" />
+    <ClCompile Include="src\xmlcatalog.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="src\xmlIO.c" />
+    <ClCompile Include="src\xmlmemory.c" />
+    <ClCompile Include="src\xmlmodule.c" />
+    <ClCompile Include="src\xmlreader.c" />
+    <ClCompile Include="src\xmlregexp.c" />
+    <ClCompile Include="src\xmlsave.c" />
+    <ClCompile Include="src\xmlschemas.c" />
+    <ClCompile Include="src\xmlschemastypes.c" />
+    <ClCompile Include="src\xmlstring.c" />
+    <ClCompile Include="src\xmlunicode.c" />
+    <ClCompile Include="src\xmlwriter.c" />
+    <ClCompile Include="src\xpath.c" />
+    <ClCompile Include="src\xpointer.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\acconfig.h" />
+    <ClInclude Include="config.h" />
+    <ClInclude Include="include\libxml.h" />
+    <ClInclude Include="src\elfgcchack.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libiconv\libiconv.vcxproj">
+      <Project>{0788db65-cd86-4a0d-a245-f29c0114373b}</Project>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

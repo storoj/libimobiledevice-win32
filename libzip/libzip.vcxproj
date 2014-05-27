@@ -133,6 +133,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;ZIP_STATIC;__STDC_LIMIT_MACROS;HAVE__SNPRINTF;HAVE__STRICMP;HAVE__STRDUP;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>$(SolutionDir)\vendors\zlib\include;$(SolutionDir)\getopt;$(SolutionDir)\vendors\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>Default</CompileAs>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

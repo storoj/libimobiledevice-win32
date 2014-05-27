@@ -88,8 +88,9 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;__STDC_FORMAT_MACROS;%(PreprocessorDefinitions);plist_STATIC</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>$(SolutionDir)\vendors\iconv\include;$(SolutionDir)\vendors\libxml2\include;$(SolutionDir)\libcnary\include;$(ProjectDir)\include;$(SolutionDir)\vendors\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)\vendors\libiconv\include;$(SolutionDir)\vendors\libxml\src;$(SolutionDir)\libcnary\include;$(ProjectDir)\include;$(SolutionDir)\vendors\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <CompileAs>CompileAsCpp</CompileAs>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

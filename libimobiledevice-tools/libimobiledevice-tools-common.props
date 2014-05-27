@@ -9,7 +9,7 @@
       <PreprocessorDefinitions>%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>libimobiledevice.lib;libplist.lib;libusbmuxd.lib;libgcc.a;ws2_32.lib;zlib.lib;libcompat.lib;getopt.lib;libgen.lib;libcnary.lib;iconv.lib;libxml2.lib;libssl.a;libcrypto.a;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libimobiledevice.lib;libplist.lib;libusbmuxd.lib;libgcc.a;ws2_32.lib;zlib.lib;libcompat.lib;getopt.lib;libgen.lib;libcnary.lib;libiconv.lib;libxml2.lib;libssl.a;libcrypto.a;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(SolutionDir)\$(Configuration);$(SolutionDir)\vendors\libgcc\lib;$(SolutionDir)\vendors\zlib\lib;$(SolutionDir)\vendors\openssl\lib;$(SolutionDir)\vendors\libxml2\lib;$(SolutionDir)\vendors\iconv\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
