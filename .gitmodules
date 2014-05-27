@@ -1,3 +1,6 @@
 [submodule "libimobiledevice-tools/idevicerestore/idevicerestore"]
 	path = libimobiledevice-tools/idevicerestore/idevicerestore
 	url = http://git.sukimashita.com/idevicerestore.git
+[submodule "libirecovery/libirecovery"]
+	path = libirecovery/libirecovery
+	url = http://git.sukimashita.com/libirecovery.git
