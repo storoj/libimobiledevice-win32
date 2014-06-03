@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="idevicerestore\src\common.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\dfu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\download.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\fls.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\idevicerestore.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\img3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\img4.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\ipsw.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\limera1n.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\locking.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\mbn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\normal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\recovery.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\restore.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\tss.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="idevicerestore\src\asr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="idevicerestore\src\common.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\dfu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\download.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\fls.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\idevicerestore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\img3.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\img4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\ipsw.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\limera1n.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\limera1n_payload.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\locking.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\mbn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\normal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\recovery.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\restore.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\tss.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="idevicerestore\src\asr.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

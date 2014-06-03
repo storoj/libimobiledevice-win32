@@ -21,4 +21,8 @@ struct timezone
 
 int gettimeofday(struct timeval *tv, struct timezone *tz);
 
+#ifndef __func__
+# define __func__ __FUNCTION__
+#endif
+
 #endif LIBCOMPAT_H
