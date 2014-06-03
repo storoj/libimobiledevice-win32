@@ -1,0 +1,225 @@
+From 1932800088fb182daea1a6f4629fa0da32c59748 Mon Sep 17 00:00:00 2001
+From: unknown <alexey.storozhev@minimakus.elegion.local>
+Date: Tue, 3 Jun 2014 19:17:31 +0400
+Subject: [PATCH] MSVC compatibility
+
+---
+ src/libirecovery.c | 74 ++++++++++++++++++++++++++++++++++++++++++------------
+ tools/irecovery.c  |  8 ++++--
+ 2 files changed, 64 insertions(+), 18 deletions(-)
+
+diff --git a/src/libirecovery.c b/src/libirecovery.c
+index 95a6bdd..c055a84 100644
+--- a/src/libirecovery.c
++++ b/src/libirecovery.c
+@@ -33,7 +33,7 @@
+ #define WIN32_LEAN_AND_MEAN
+ #include <windows.h>
+ #undef interface
+-#include <setupapi.h>
++#include <SetupAPI.h>
+ #define _FMT_qX "%I64X"
+ #define _FMT_016llx "%016I64x"
+ #ifndef sleep
+@@ -41,6 +41,42 @@
+ #endif
+ #endif
+ 
++#ifndef __func__
++# if defined(__FUNCTIONW__)
++#  define __func__ __FUNCTIONW__
++# endif
++#endif
++
++#ifdef _MSC_VER
++
++#define snprintf c99_snprintf
++
++inline int c99_vsnprintf(char* str, size_t size, const char* format, va_list ap)
++{
++    int count = -1;
++
++    if (size != 0)
++        count = _vsnprintf_s(str, size, _TRUNCATE, format, ap);
++    if (count == -1)
++        count = _vscprintf(format, ap);
++
++    return count;
++}
++
++inline int c99_snprintf(char* str, size_t size, const char* format, ...)
++{
++    int count;
++    va_list ap;
++
++    va_start(ap, format);
++    count = c99_vsnprintf(str, size, format, ap);
++    va_end(ap);
++
++    return count;
++}
++
++#endif // _MSC_VER
++
+ #include "libirecovery.h"
+ 
+ struct irecv_client_private {
+@@ -56,9 +92,14 @@ struct irecv_client_private {
+ 	HANDLE handle;
+ 	HANDLE hDFU;
+ 	HANDLE hIB;
++#ifdef UNICODE
++	LPCWSTR iBootPath;
++	LPCWSTR DfuPath;
++#else
+ 	LPSTR iBootPath;
+ 	LPSTR DfuPath;
+ #endif
++#endif
+ 	irecv_event_cb_t progress_callback;
+ 	irecv_event_cb_t received_callback;
+ 	irecv_event_cb_t connected_callback;
+@@ -202,7 +243,7 @@ static int irecv_get_string_descriptor_ascii(irecv_client_t client, uint8_t desc
+ 	memset(data, 0, sizeof(data));
+ 	memset(buffer, 0, size);
+ 
+-	ret = irecv_usb_control_transfer(client, 0x80, 0x06, (0x03 << 8) | desc_index, langid, data, sizeof(data), USB_TIMEOUT);
++	ret = (irecv_error_t)irecv_usb_control_transfer(client, 0x80, 0x06, (0x03 << 8) | desc_index, langid, data, sizeof(data), USB_TIMEOUT);
+ 
+ 	if (ret < 0) return ret;
+ 	if (data[1] != 0x03) return IRECV_E_UNKNOWN_ERROR;
+@@ -231,7 +272,7 @@ static void irecv_load_device_info_from_iboot_string(irecv_client_t client, cons
+ 
+ 	memset(&client->device_info, '\0', sizeof(struct irecv_device_info));
+ 
+-	char* ptr;
++	const char* ptr;
+ 
+ 	ptr = strstr(iboot_string, "CPID:");
+ 	if (ptr != NULL) {
+@@ -273,9 +314,10 @@ static void irecv_load_device_info_from_iboot_string(irecv_client_t client, cons
+ 	ptr = strstr(iboot_string, "SRNM:[");
+ 	if(ptr != NULL) {
+ 		sscanf(ptr, "SRNM:[%s]", tmp);
+-		ptr = strrchr(tmp, ']');
+-		if(ptr != NULL) {
+-			*ptr = '\0';
++
++		char *bracket = strrchr(tmp, ']');
++		if(bracket != NULL) {
++			*bracket = '\0';
+ 		}
+ 		client->device_info.srnm = strdup(tmp);
+ 	}
+@@ -284,9 +326,9 @@ static void irecv_load_device_info_from_iboot_string(irecv_client_t client, cons
+ 	ptr = strstr(iboot_string, "IMEI:[");
+ 	if(ptr != NULL) {
+ 		sscanf(ptr, "IMEI:[%s]", tmp);
+-		ptr = strrchr(tmp, ']');
+-		if(ptr != NULL) {
+-			*ptr = '\0';
++		char *bracket = strrchr(tmp, ']');
++		if(bracket != NULL) {
++			*bracket = '\0';
+ 		}
+ 		client->device_info.imei = strdup(tmp);
+ 	}
+@@ -350,7 +392,7 @@ static void irecv_copy_nonce_with_tag(irecv_client_t client, const char* tag, un
+ 		return;
+ 	}
+ 
+-	unsigned char *nn = malloc(nlen);
++	unsigned char *nn = (unsigned char *)malloc(nlen);
+ 	if (!nn) {
+ 		return;
+ 	}
+@@ -831,7 +873,7 @@ irecv_error_t irecv_open_with_ecid(irecv_client_t* pclient, unsigned long long e
+ 
+ 	return IRECV_E_UNABLE_TO_CONNECT;
+ #else
+-	int ret = mobiledevice_connect(pclient, ecid);
++	irecv_error_t ret = mobiledevice_connect(pclient, ecid);
+ 	if (ret == IRECV_E_SUCCESS) {
+ 		irecv_client_t client = *pclient;
+ 		int error = IRECV_E_SUCCESS;
+@@ -1061,7 +1103,7 @@ static irecv_error_t irecv_send_command_raw(irecv_client_t client, const char* c
+ }
+ 
+ irecv_error_t irecv_send_command(irecv_client_t client, const char* command) {
+-	irecv_error_t error = 0;
++	irecv_error_t error = IRECV_E_SUCCESS;
+ 
+ 	if (check_context(client) != IRECV_E_SUCCESS)
+ 		return IRECV_E_NO_DEVICE;
+@@ -1152,7 +1194,7 @@ static irecv_error_t irecv_get_status(irecv_client_t client, unsigned int* statu
+ }
+ 
+ irecv_error_t irecv_send_buffer(irecv_client_t client, unsigned char* buffer, unsigned long length, int dfu_notify_finished) {
+-	irecv_error_t error = 0;
++	irecv_error_t error = IRECV_E_SUCCESS;
+ 	int recovery_mode = ((client->mode != IRECV_K_DFU_MODE) && (client->mode != IRECV_K_WTF_MODE));
+ 
+ 	if (check_context(client) != IRECV_E_SUCCESS)
+@@ -1172,7 +1214,7 @@ irecv_error_t irecv_send_buffer(irecv_client_t client, unsigned char* buffer, un
+ 
+ 	/* initiate transfer */
+ 	if (recovery_mode) {
+-		error = irecv_usb_control_transfer(client, 0x41, 0, 0, 0, NULL, 0, USB_TIMEOUT);
++		error = (irecv_error_t)irecv_usb_control_transfer(client, 0x41, 0, 0, 0, NULL, 0, USB_TIMEOUT);
+ 	} else {
+ 		unsigned char dump[4];
+ 		if (irecv_usb_control_transfer(client, 0xa1, 5, 0, 0, dump, 1, USB_TIMEOUT) == 1) {
+@@ -1195,7 +1237,7 @@ irecv_error_t irecv_send_buffer(irecv_client_t client, unsigned char* buffer, un
+ 
+ 		/* Use bulk transfer for recovery mode and control transfer for DFU and WTF mode */
+ 		if (recovery_mode) {
+-			error = irecv_usb_bulk_transfer(client, 0x04, &buffer[i * packet_size], size, &bytes, USB_TIMEOUT);
++			error = (irecv_error_t)irecv_usb_bulk_transfer(client, 0x04, &buffer[i * packet_size], size, &bytes, USB_TIMEOUT);
+ 		} else {
+ 			int j;
+ 			for (j = 0; j < size; j++) {
+@@ -1637,7 +1679,7 @@ irecv_error_t irecv_devices_get_device_by_hardware_model(const char* hardware_mo
+ }
+ 
+ irecv_client_t irecv_reconnect(irecv_client_t client, int initial_pause) {
+-	irecv_error_t error = 0;
++	irecv_error_t error = IRECV_E_SUCCESS;
+ 	irecv_client_t new_client = NULL;
+ 	irecv_event_cb_t progress_callback = client->progress_callback;
+ 
+diff --git a/tools/irecovery.c b/tools/irecovery.c
+index f3f7f39..99e81c9 100644
+--- a/tools/irecovery.c
++++ b/tools/irecovery.c
+@@ -36,6 +36,10 @@
+ #define _FMT_lld "%lld"
+ #endif
+ 
++#if !defined(strtoull)
++#  define strtoull _strtoui64
++#endif
++
+ #define FILE_HISTORY_PATH ".irecovery"
+ #define debug(...) if(verbose) fprintf(stderr, __VA_ARGS__)
+ 
+@@ -191,7 +195,7 @@ static void append_command_to_history(char* cmd) {
+ }
+ 
+ static void init_shell(irecv_client_t client) {
+-	irecv_error_t error = 0;
++	irecv_error_t error = IRECV_E_SUCCESS;
+ 	load_command_history();
+ 	irecv_event_subscribe(client, IRECV_PROGRESS, &progress_cb, NULL);
+ 	irecv_event_subscribe(client, IRECV_RECEIVED, &received_cb, NULL);
+@@ -339,7 +343,7 @@ int main(int argc, char* argv[]) {
+ 	unsigned long long ecid = 0;
+ 	int mode = -1;
+ 	char* argument = NULL;
+-	irecv_error_t error = 0;
++	irecv_error_t error = IRECV_E_SUCCESS;
+ 
+ 	char* buffer = NULL;
+ 	uint64_t buffer_length = 0;
+-- 
+1.8.3.msysgit.0
+

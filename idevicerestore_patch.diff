@@ -1,0 +1,647 @@
+From b48d3828f95ea96617201dcb0c38116dbb70139f Mon Sep 17 00:00:00 2001
+From: unknown <alexey.storozhev@minimakus.elegion.local>
+Date: Tue, 3 Jun 2014 19:18:03 +0400
+Subject: [PATCH] MSVC compatibility
+
+---
+ src/common.c         | 10 ++++----
+ src/common.h         | 16 +++++++++++-
+ src/dfu.c            |  4 +--
+ src/download.c       |  4 +--
+ src/fls.c            | 70 +++++++++++++++++++++++++++-------------------------
+ src/fls.h            | 65 +++++++++++++++++++++++++++++++++++++++++++++---
+ src/idevicerestore.c |  6 ++---
+ src/img3.h           |  2 +-
+ src/img4.c           |  2 +-
+ src/img4.h           |  2 +-
+ src/ipsw.c           |  4 +++
+ src/mbn.c            |  2 +-
+ src/mbn.h            | 15 ++++++++++-
+ src/recovery.c       |  2 +-
+ src/restore.c        |  6 ++---
+ src/tss.c            |  8 +++---
+ 16 files changed, 155 insertions(+), 63 deletions(-)
+
+diff --git a/src/common.c b/src/common.c
+index 7646361..338ccee 100644
+--- a/src/common.c
++++ b/src/common.c
+@@ -56,13 +56,13 @@ void error(const char* format, ...)
+ {
+ 	va_list vargs, vargs2;
+ 	va_start(vargs, format);
+-	va_copy(vargs2, vargs);
++	//va_copy(vargs2, vargs);
+ 	vsnprintf(idevicerestore_err_buff, idevicerestore_err_buff_size, format, vargs);
+ 	va_end(vargs);
+-	if (!error_disabled) {
+-		vfprintf((error_stream) ? error_stream : stderr, format, vargs2);
+-	}
+-	va_end(vargs2);
++	//if (!error_disabled) {
++	//	vfprintf((error_stream) ? error_stream : stderr, format, vargs2);
++	//}
++	//va_end(vargs2);
+ }
+ 
+ void debug(const char* format, ...)
+diff --git a/src/common.h b/src/common.h
+index 61dfbb1..cfcf9cf 100644
+--- a/src/common.h
++++ b/src/common.h
+@@ -123,7 +123,8 @@ char *generate_guid();
+ 
+ #ifdef WIN32
+ #include <windows.h>
+-#define __mkdir(path, mode) mkdir(path)
++#include <direct.h>
++#define __mkdir(path, mode) _mkdir(path)
+ #define FMT_qu "%I64u"
+ #ifndef sleep
+ #define sleep(x) Sleep(x*1000)
+@@ -134,6 +135,19 @@ char *generate_guid();
+ #define FMT_qu "%qu"
+ #endif
+ 
++#ifdef _MSC_VER
++# define strcasecmp	_stricmp
++# define snprintf _snprintf
++#endif
++
++#ifndef __func__
++# define __func__ __FUNCTION__
++#endif
++
++#if !defined(strtoull)
++#  define strtoull _strtoui64
++#endif
++
+ int mkdir_with_parents(const char *dir, int mode);
+ 
+ void idevicerestore_progress(struct idevicerestore_client_t* client, int step, double progress);
+diff --git a/src/dfu.c b/src/dfu.c
+index 12d27c6..03b3cda 100644
+--- a/src/dfu.c
++++ b/src/dfu.c
+@@ -136,7 +136,7 @@ const char* dfu_check_product_type(struct idevicerestore_client_t* client) {
+ 
+ int dfu_send_buffer(struct idevicerestore_client_t* client, unsigned char* buffer, unsigned int size)
+ {
+-	irecv_error_t err = 0;
++	irecv_error_t err = IRECV_E_SUCCESS;
+ 
+ 	info("Sending data (%d bytes)...\n", size);
+ 
+@@ -161,7 +161,7 @@ int dfu_send_component(struct idevicerestore_client_t* client, plist_t build_ide
+ 	uint32_t size = 0;
+ 	unsigned char* data = NULL;
+ 	char* path = NULL;
+-	irecv_error_t err = 0;
++	irecv_error_t err = IRECV_E_SUCCESS;
+ 	int flag = 1;
+ 
+ 	if (client->tss) {
+diff --git a/src/download.c b/src/download.c
+index 6adc523..24eb435 100644
+--- a/src/download.c
++++ b/src/download.c
+@@ -39,7 +39,7 @@ typedef struct {
+ static size_t download_write_buffer_callback(char* data, size_t size, size_t nmemb, curl_response* response) {
+ 	size_t total = size * nmemb;
+ 	if (total != 0) {
+-		response->content = realloc(response->content, response->length + total + 1);
++		response->content = (char *)realloc(response->content, response->length + total + 1);
+ 		memcpy(response->content + response->length, data, total);
+ 		response->content[response->length + total] = '\0';
+ 		response->length += total;
+@@ -58,7 +58,7 @@ int download_to_buffer(const char* url, char** buf, uint32_t* length)
+ 
+ 	curl_response response;
+ 	response.length = 0;
+-	response.content = malloc(1);
++	response.content = (char *)malloc(1);
+ 	response.content[0] = '\0';
+ 
+ 	if (idevicerestore_debug)
+diff --git a/src/fls.c b/src/fls.c
+index f422447..b36128b 100644
+--- a/src/fls.c
++++ b/src/fls.c
+@@ -24,6 +24,10 @@
+ #include "fls.h"
+ #include "common.h"
+ 
++#ifdef _MSC_VER
++# include <stddef.h>
++#endif
++
+ #ifndef offsetof
+ #define offsetof(type, member)  __builtin_offsetof (type, member)
+ #endif
+@@ -40,7 +44,7 @@ static void fls_parse_elements(fls_file* fls)
+ 
+ 	fls_element* cur = NULL;
+ 	do {
+-		void* p = fls->data + offset;
++		void* p = (char *)fls->data + offset;
+ 		uint32_t hdrsize = 0;
+ 		cur = (fls_element*)p;
+ 		if ((offset + cur->size) > fls->size) {
+@@ -54,7 +58,7 @@ static void fls_parse_elements(fls_file* fls)
+ 			fls_0c_element* xe = (fls_0c_element*)malloc(sizeof(fls_0c_element));
+ 			memset(xe, '\0', sizeof(fls_0c_element));
+ 			memcpy((void*)xe, p, hdrsize);
+-			xe->data = (xe->size > hdrsize) ? p + hdrsize : NULL;
++			xe->data = (xe->size > hdrsize) ? (const unsigned char *)p + hdrsize : NULL;
+ 			ne = (fls_element*)xe;
+ 			fls->c_element = xe;
+ 			}
+@@ -65,7 +69,7 @@ static void fls_parse_elements(fls_file* fls)
+ 			fls_10_element* xe = (fls_10_element*)malloc(sizeof(fls_10_element));
+ 			memset(xe, '\0', sizeof(fls_10_element));
+ 			memcpy((void*)xe, p, hdrsize);
+-			xe->data = (xe->size > hdrsize) ? p + hdrsize : NULL;
++			xe->data = (xe->size > hdrsize) ? (const unsigned char *)p + hdrsize : NULL;
+ 			ne = (fls_element*)xe;
+ 			}
+ 			break;
+@@ -75,7 +79,7 @@ static void fls_parse_elements(fls_file* fls)
+ 			fls_14_element* xe = (fls_14_element*)malloc(sizeof(fls_14_element));
+ 			memset(xe, '\0', sizeof(fls_14_element));
+ 			memcpy((void*)xe, p, hdrsize);
+-			xe->data = (xe->size > hdrsize) ? p + hdrsize : NULL;
++			xe->data = (xe->size > hdrsize) ? (const unsigned char *)p + hdrsize : NULL;
+ 			ne = (fls_element*)xe;
+ 			}
+ 			break;
+@@ -85,7 +89,7 @@ static void fls_parse_elements(fls_file* fls)
+ 			memset(ne, '\0', sizeof(fls_element));
+ 			ne->type = cur->type;
+ 			ne->size = cur->size;
+-			ne->data = (ne->size > hdrsize) ? p + hdrsize : NULL;
++			ne->data = (ne->size > hdrsize) ? (const unsigned char *)p + hdrsize : NULL;
+ 			break;
+ 		}
+ 		if ((fls->num_elements + 1) > fls->max_elements) {
+@@ -175,28 +179,28 @@ int fls_update_sig_blob(fls_file* fls, const unsigned char* sigdata, unsigned in
+ 			((fls_0c_element*)fls->elements[i])->offset = offset+hdrsize;
+ 			// copy first part of data
+ 			firstpartlen = fls->elements[i]->size - hdrsize - oldsiglen;
+-			memcpy(newdata+offset+hdrsize, ((fls_0c_element*)fls->elements[i])->data, firstpartlen);
++			memcpy((char *)newdata+offset+hdrsize, ((fls_0c_element*)fls->elements[i])->data, firstpartlen);
+ 			// copy new signature data
+-			memcpy(newdata+offset+hdrsize+firstpartlen, sigdata, siglen);
+-			((fls_0c_element*)fls->elements[i])->data = newdata+offset+hdrsize;
++			memcpy((char *)newdata+offset+hdrsize+firstpartlen, sigdata, siglen);
++			((fls_0c_element*)fls->elements[i])->data = (const unsigned char *)newdata+offset+hdrsize;
+ 			fls->elements[i]->size -= oldsiglen;
+ 			fls->elements[i]->size += siglen;
+ 			((fls_0c_element*)fls->elements[i])->data_size -= oldsiglen;
+ 			((fls_0c_element*)fls->elements[i])->data_size += siglen;
+-			memcpy(newdata+offset+hdrsize+0x10, &(((fls_0c_element*)fls->elements[i])->data_size), 4);
++			memcpy((char *)newdata+offset+hdrsize+0x10, &(((fls_0c_element*)fls->elements[i])->data_size), 4);
+ 			// copy header
+-			memcpy(newdata+offset, fls->elements[i], hdrsize);
++			memcpy((char *)newdata+offset, fls->elements[i], hdrsize);
+ 			break;
+ 		case 0x10:
+ 			hdrsize = offsetof(fls_10_element, data);
+ 			// update offset
+ 			((fls_10_element*)fls->elements[i])->offset = offset+hdrsize;
+ 			// copy header
+-			memcpy(newdata+offset, fls->elements[i], hdrsize);
++			memcpy((char *)newdata+offset, fls->elements[i], hdrsize);
+ 			// copy data
+ 			if (fls->elements[i]->size > hdrsize) {
+-				memcpy(newdata+offset+hdrsize, ((fls_10_element*)fls->elements[i])->data, fls->elements[i]->size - hdrsize);
+-				((fls_10_element*)fls->elements[i])->data = newdata+offset+hdrsize;
++				memcpy((char *)newdata+offset+hdrsize, ((fls_10_element*)fls->elements[i])->data, fls->elements[i]->size - hdrsize);
++				((fls_10_element*)fls->elements[i])->data = (const unsigned char *)newdata+offset+hdrsize;
+ 			} else {
+ 				((fls_10_element*)fls->elements[i])->data = NULL;
+ 			}
+@@ -206,11 +210,11 @@ int fls_update_sig_blob(fls_file* fls, const unsigned char* sigdata, unsigned in
+ 			// update offset
+ 			((fls_14_element*)fls->elements[i])->offset = offset+hdrsize;
+ 			// copy header
+-			memcpy(newdata+offset, fls->elements[i], hdrsize);
++			memcpy((char *)newdata+offset, fls->elements[i], hdrsize);
+ 			// copy data
+ 			if (fls->elements[i]->size > hdrsize) {
+-				memcpy(newdata+offset+hdrsize, ((fls_14_element*)fls->elements[i])->data, fls->elements[i]->size - hdrsize);
+-				((fls_14_element*)fls->elements[i])->data = newdata+offset+hdrsize;
++				memcpy((char *)newdata+offset+hdrsize, ((fls_14_element*)fls->elements[i])->data, fls->elements[i]->size - hdrsize);
++				((fls_14_element*)fls->elements[i])->data = (const unsigned char *)newdata+offset+hdrsize;
+ 			} else {
+ 				((fls_14_element*)fls->elements[i])->data = NULL;
+ 			}
+@@ -218,11 +222,11 @@ int fls_update_sig_blob(fls_file* fls, const unsigned char* sigdata, unsigned in
+ 		default:
+ 			hdrsize = offsetof(fls_element, data);
+ 			// copy header
+-			memcpy(newdata+offset, fls->elements[i], hdrsize);
++			memcpy((char *)newdata+offset, fls->elements[i], hdrsize);
+ 			// copy data
+ 			if (fls->elements[i]->size > hdrsize) {
+-				memcpy(newdata+offset+hdrsize, fls->elements[i]->data, fls->elements[i]->size - hdrsize);
+-				fls->elements[i]->data = newdata+offset+hdrsize;
++				memcpy((char *)newdata+offset+hdrsize, fls->elements[i]->data, fls->elements[i]->size - hdrsize);
++				fls->elements[i]->data = (const unsigned char *)newdata+offset+hdrsize;
+ 			} else {
+ 				fls->elements[i]->data = NULL;
+ 			}
+@@ -271,29 +275,29 @@ int fls_insert_ticket(fls_file* fls, const unsigned char* data, unsigned int siz
+ 			// update offset
+ 			((fls_0c_element*)fls->elements[i])->offset = offset+hdrsize;
+ 			// copy ticket data
+-			memcpy(newdata+offset+hdrsize, data, size);
++			memcpy((char*)newdata+offset+hdrsize, data, size);
+ 			if (padding > 0) {
+ 				// padding
+-				memset(newdata+offset+hdrsize+size, '\xFF', padding);
++				memset((char*)newdata+offset+hdrsize+size, '\xFF', padding);
+ 			}
+ 			// copy remaining data
+-			memcpy(newdata+offset+hdrsize+size+padding, ((fls_0c_element*)fls->elements[i])->data, fls->elements[i]->size);
+-			((fls_0c_element*)fls->elements[i])->data = newdata+offset+hdrsize;
++			memcpy((char*)newdata+offset+hdrsize+size+padding, ((fls_0c_element*)fls->elements[i])->data, fls->elements[i]->size);
++			((fls_0c_element*)fls->elements[i])->data = (const unsigned char *)newdata+offset+hdrsize;
+ 			fls->elements[i]->size += (size + padding);
+ 			((fls_0c_element*)fls->elements[i])->data_size += (size + padding);
+ 			// copy header
+-			memcpy(newdata+offset, fls->elements[i], hdrsize);
++			memcpy((char*)newdata+offset, fls->elements[i], hdrsize);
+ 			break;
+ 		case 0x10:
+ 			hdrsize = offsetof(fls_10_element, data);
+ 			// update offset
+ 			((fls_10_element*)fls->elements[i])->offset = offset+hdrsize;
+ 			// copy header
+-			memcpy(newdata+offset, fls->elements[i], hdrsize);
++			memcpy((char*)newdata+offset, fls->elements[i], hdrsize);
+ 			// copy data
+ 			if (fls->elements[i]->size > hdrsize) {
+-				memcpy(newdata+offset+hdrsize, ((fls_10_element*)fls->elements[i])->data, fls->elements[i]->size - hdrsize);
+-				((fls_10_element*)fls->elements[i])->data = newdata+offset+hdrsize;
++				memcpy((char*)newdata+offset+hdrsize, ((fls_10_element*)fls->elements[i])->data, fls->elements[i]->size - hdrsize);
++				((fls_10_element*)fls->elements[i])->data = (const unsigned char *)newdata+offset+hdrsize;
+ 			} else {
+ 				((fls_10_element*)fls->elements[i])->data = NULL;
+ 			}
+@@ -303,11 +307,11 @@ int fls_insert_ticket(fls_file* fls, const unsigned char* data, unsigned int siz
+ 			// update offset
+ 			((fls_14_element*)fls->elements[i])->offset = offset+hdrsize;
+ 			// copy header
+-			memcpy(newdata+offset, fls->elements[i], hdrsize);
++			memcpy((char *)newdata+offset, fls->elements[i], hdrsize);
+ 			// copy data
+ 			if (fls->elements[i]->size > hdrsize) {
+-				memcpy(newdata+offset+hdrsize, ((fls_14_element*)fls->elements[i])->data, fls->elements[i]->size - hdrsize);
+-				((fls_14_element*)fls->elements[i])->data = newdata+offset+hdrsize;
++				memcpy((char *)newdata+offset+hdrsize, ((fls_14_element*)fls->elements[i])->data, fls->elements[i]->size - hdrsize);
++				((fls_14_element*)fls->elements[i])->data = (const unsigned char *)newdata+offset+hdrsize;
+ 			} else {
+ 				((fls_14_element*)fls->elements[i])->data = NULL;
+ 			}
+@@ -315,11 +319,11 @@ int fls_insert_ticket(fls_file* fls, const unsigned char* data, unsigned int siz
+ 		default:
+ 			hdrsize = offsetof(fls_element, data);
+ 			// copy header
+-			memcpy(newdata+offset, fls->elements[i], hdrsize);
++			memcpy((char *)newdata+offset, fls->elements[i], hdrsize);
+ 			// copy data
+ 			if (fls->elements[i]->size > hdrsize) {
+-				memcpy(newdata+offset+hdrsize, fls->elements[i]->data, fls->elements[i]->size - hdrsize);
+-				fls->elements[i]->data = newdata+offset+hdrsize;
++				memcpy((char *)newdata+offset+hdrsize, fls->elements[i]->data, fls->elements[i]->size - hdrsize);
++				fls->elements[i]->data = (const unsigned char *)newdata+offset+hdrsize;
+ 			} else {
+ 				fls->elements[i]->data = NULL;
+ 			}
+diff --git a/src/fls.h b/src/fls.h
+index 57b3869..3cdae3b 100644
+--- a/src/fls.h
++++ b/src/fls.h
+@@ -23,14 +23,33 @@
+ 
+ #include <stdint.h>
+ 
++#ifdef _MSC_VER
++#pragma pack(push,1)
++#endif
++
+ struct _fls_element {
+ 	uint32_t type;
+ 	uint32_t size;
+ 	uint32_t empty;
+ 	const unsigned char* data;
+-} __attribute__((packed));
++} 
++#ifndef _MSC_VER
++__attribute__((packed))
++#endif
++;
++
++#ifdef _MSC_VER
++#pragma pack(pop)
++#endif
++
+ typedef struct _fls_element fls_element;
+ 
++// #############
++
++#ifdef _MSC_VER
++#pragma pack(push,1)
++#endif
++
+ struct _fls_0c_element {
+ 	uint32_t type;
+ 	uint32_t size;
+@@ -43,9 +62,23 @@ struct _fls_0c_element {
+ 	uint32_t off_0x20;
+ 	uint32_t offset; // absolute offset of data in file
+ 	const unsigned char* data; // data+0x14 contains offset to sig blob
+-} __attribute__((packed));
++}
++#ifndef _MSC_VER
++__attribute__((packed))
++#endif
++;
++#ifdef _MSC_VER
++#pragma pack(pop)
++#endif
++
+ typedef struct _fls_0c_element fls_0c_element;
+ 
++// #############
++
++#ifdef _MSC_VER
++#pragma pack(push,1)
++#endif
++
+ struct _fls_10_element {
+ 	uint32_t type;
+ 	uint32_t size;
+@@ -54,9 +87,23 @@ struct _fls_10_element {
+ 	uint32_t off_0x10;
+ 	uint32_t offset;
+ 	const unsigned char* data;
+-} __attribute__((packed));
++}
++#ifndef _MSC_VER
++__attribute__((packed))
++#endif
++;
++#ifdef _MSC_VER
++#pragma pack(pop)
++#endif
++
+ typedef struct _fls_10_element fls_10_element;
+ 
++// #############
++
++#ifdef _MSC_VER
++#pragma pack(push,1)
++#endif
++
+ struct _fls_14_element {
+ 	uint32_t type;
+ 	uint32_t size;
+@@ -65,9 +112,19 @@ struct _fls_14_element {
+ 	uint32_t off_0x10;
+ 	uint32_t offset;
+ 	const unsigned char* data;
+-} __attribute__((packed));
++}
++#ifndef _MSC_VER
++__attribute__((packed))
++#endif
++;
++#ifdef _MSC_VER
++#pragma pack(pop)
++#endif
++
+ typedef struct _fls_14_element fls_14_element;
+ 
++// #############
++
+ typedef struct {
+ 	unsigned int num_elements;
+ 	unsigned int max_elements;
+diff --git a/src/idevicerestore.c b/src/idevicerestore.c
+index 8625176..cc2de88 100644
+--- a/src/idevicerestore.c
++++ b/src/idevicerestore.c
+@@ -674,7 +674,7 @@ int idevicerestore_start(struct idevicerestore_client_t* client)
+ 	} else {
+ 		strcpy(tmpf, client->ipsw);
+ 	}
+-	char* p = strrchr((const char*)tmpf, '.');
++	char* p = (char *)strrchr((const char*)tmpf, '.');
+ 	if (p) {
+ 		*p = '\0';
+ 	}
+@@ -1401,7 +1401,7 @@ int get_tss_response(struct idevicerestore_client_t* client, plist_t build_ident
+ 							}
+ 						}
+ 						bufsize += readsize;
+-						bin = realloc(bin, bufsize);
++						bin = (char *)realloc(bin, bufsize);
+ 						p = bin + blen;
+ 					} while (!gzeof(zf));
+ 					gzclose(zf);
+@@ -1593,7 +1593,7 @@ int extract_component(const char* ipsw, const char* path, unsigned char** compon
+ 		return -1;
+ 	}
+ 
+-	component_name = strrchr(path, '/');
++	component_name = (char *)strrchr(path, '/');
+ 	if (component_name != NULL)
+ 		component_name++;
+ 	else
+diff --git a/src/img3.h b/src/img3.h
+index 4a088b7..20d9248 100644
+--- a/src/img3.h
++++ b/src/img3.h
+@@ -98,7 +98,7 @@ typedef struct {
+ int img3_stitch_component(const char* component_name, const unsigned char* component_data, unsigned int component_size, const unsigned char* blob, unsigned int blob_size, unsigned char** img3_data, unsigned int *img3_size);
+ 
+ #ifdef __cplusplus
+-}s
++}
+ #endif
+ 
+ #endif
+diff --git a/src/img4.c b/src/img4.c
+index 18d8ab3..69dbefc 100644
+--- a/src/img4.c
++++ b/src/img4.c
+@@ -71,7 +71,7 @@ static unsigned char* asn1_create_element_header(unsigned char type, unsigned in
+ 		buf[off++] = size & 0xFF;
+ 	}
+ 
+-	*data = malloc(off);
++	*data = (unsigned char *)malloc(off);
+ 	memcpy(*data, buf, off);
+ 	*data_size = off;
+ 
+diff --git a/src/img4.h b/src/img4.h
+index 97a61aa..b83f1ca 100644
+--- a/src/img4.h
++++ b/src/img4.h
+@@ -29,7 +29,7 @@ extern "C" {
+ int img4_stitch_component(const char* component_name, const unsigned char* component_data, unsigned int component_size, const unsigned char* blob, unsigned int blob_size, unsigned char** img4_data, unsigned int *img4_size);
+ 
+ #ifdef __cplusplus
+-}s
++}
+ #endif
+ 
+ #endif
+diff --git a/src/ipsw.c b/src/ipsw.c
+index 9f24784..c5c57ff 100644
+--- a/src/ipsw.c
++++ b/src/ipsw.c
+@@ -33,6 +33,10 @@
+ #include "common.h"
+ #include "idevicerestore.h"
+ 
++#if !defined(strtoull)
++#  define strtoull _strtoui64
++#endif
++
+ #define BUFSIZE 0x100000
+ 
+ typedef struct {
+diff --git a/src/mbn.c b/src/mbn.c
+index a01e3cb..2e93f2a 100644
+--- a/src/mbn.c
++++ b/src/mbn.c
+@@ -66,7 +66,7 @@ int mbn_update_sig_blob(mbn_file* mbn, const unsigned char* sigdata, unsigned in
+ 		return -1;
+ 	}
+ 
+-	memcpy(mbn->data + mbn->parsed_sig_offset, sigdata, siglen);
++	memcpy((char *)mbn->data + mbn->parsed_sig_offset, sigdata, siglen);
+ 
+ 	return 0;
+ }
+diff --git a/src/mbn.h b/src/mbn.h
+index a42a45b..4f4933f 100644
+--- a/src/mbn.h
++++ b/src/mbn.h
+@@ -23,6 +23,10 @@
+ 
+ #include <stdint.h>
+ 
++#ifdef _MSC_VER
++#pragma pack(push,1)
++#endif
++
+ struct _mbn_header {
+ 	uint32_t type;           // the signed .mbn files have 0xA as value.
+ 	uint32_t unk_0x04;
+@@ -34,7 +38,16 @@ struct _mbn_header {
+ 	uint32_t unk_0x1c;
+ 	uint32_t unk_0x20;
+ 	uint32_t unk_0x24;
+-} __attribute__((packed));
++}
++
++#ifndef _MSC_VER
++__attribute__((packed))
++#endif
++;
++#ifdef _MSC_VER
++#pragma pack(pop)
++#endif
++
+ typedef struct _mbn_header mbn_header;
+ 
+ typedef struct {
+diff --git a/src/recovery.c b/src/recovery.c
+index 91c43f3..73b5376 100644
+--- a/src/recovery.c
++++ b/src/recovery.c
+@@ -262,7 +262,7 @@ int recovery_send_component(struct idevicerestore_client_t* client, plist_t buil
+ 	unsigned int size = 0;
+ 	unsigned char* data = NULL;
+ 	char* path = NULL;
+-	irecv_error_t err = 0;
++	irecv_error_t err = IRECV_E_SUCCESS;
+ 
+ 	if (client->tss) {
+ 		if (tss_response_get_path_by_entry(client->tss, component, &path) < 0) {
+diff --git a/src/restore.c b/src/restore.c
+index 7e23bd2..2aa5c61 100644
+--- a/src/restore.c
++++ b/src/restore.c
+@@ -730,7 +730,7 @@ int restore_send_root_ticket(restored_client_t restore, struct idevicerestore_cl
+ 	}
+ 
+ 	if (client->image4supported) {
+-		if (!tss_response_get_ap_img4_ticket(client->tss, &data, &len) < 0) {
++		if (!(tss_response_get_ap_img4_ticket(client->tss, &data, &len) < 0)) {
+ 			error("ERROR: Unable to get ApImg4Ticket from TSS\n");
+ 			return -1;
+ 		}
+@@ -1106,7 +1106,7 @@ static int restore_sign_bbfw(const char* bbfwtmp, plist_t bbtss, const unsigned
+ 		if (node && (strcmp(key + (strlen(key) - 5), "-Blob") == 0) && (plist_get_node_type(node) == PLIST_DATA)) {
+ 			key[strlen(key)-5] = 0;
+ 			const char* signfn = restore_get_bbfw_fn_for_element(key);
+-			char* ext = strrchr(signfn, '.');
++			const char* ext = strrchr(signfn, '.');
+ 			if (strcmp(ext, ".fls") == 0) {
+ 				is_fls = 1;
+ 			}
+@@ -1238,7 +1238,7 @@ static int restore_sign_bbfw(const char* bbfwtmp, plist_t bbtss, const unsigned
+ 		if (bb_nonce && !skip) {
+ 			const char* fn = zip_get_name(za, i, 0);
+ 			if (fn) {
+-				char* ext = strrchr(fn, '.');
++				const char* ext = strrchr(fn, '.');
+ 				if (strcmp(ext, ".fls") == 0 || strcmp(ext, ".mbn") == 0) {
+ 					skip = 1;
+ 				}
+diff --git a/src/tss.c b/src/tss.c
+index 99c4538..05ad6df 100644
+--- a/src/tss.c
++++ b/src/tss.c
+@@ -42,7 +42,7 @@ typedef struct {
+ } tss_response;
+ 
+ char* ecid_to_string(uint64_t ecid) {
+-	char* ecid_string = malloc(ECID_STRSIZE);
++	char* ecid_string = (char *)malloc(ECID_STRSIZE);
+ 	memset(ecid_string, '\0', ECID_STRSIZE);
+ 	if (ecid == 0) {
+ 		error("ERROR: Invalid ECID passed.\n");
+@@ -610,7 +610,7 @@ int tss_request_add_baseband_tags(plist_t request, plist_t parameters, plist_t o
+ static size_t tss_write_callback(char* data, size_t size, size_t nmemb, tss_response* response) {
+ 	size_t total = size * nmemb;
+ 	if (total != 0) {
+-		response->content = realloc(response->content, response->length + total + 1);
++		response->content = (char *)realloc(response->content, response->length + total + 1);
+ 		memcpy(response->content + response->length, data, total);
+ 		response->content[response->length + total] = '\0';
+ 		response->length += total;
+@@ -657,14 +657,14 @@ plist_t tss_request_send(plist_t tss_request, const char* server_url_string) {
+ 		header = curl_slist_append(header, "Content-type: text/xml; charset=\"utf-8\"");
+ 		header = curl_slist_append(header, "Expect:");
+ 
+-		response = malloc(sizeof(tss_response));
++		response = (tss_response*)malloc(sizeof(tss_response));
+ 		if (response == NULL) {
+ 			fprintf(stderr, "Unable to allocate sufficent memory\n");
+ 			return NULL;
+ 		}
+ 
+ 		response->length = 0;
+-		response->content = malloc(1);
++		response->content = (char *)malloc(1);
+ 		response->content[0] = '\0';
+ 
+ 		/* disable SSL verification to allow download from untrusted https locations */
+-- 
+1.8.3.msysgit.0
+
