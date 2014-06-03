@@ -1049,15 +1049,15 @@ int usbmuxd_recv_timeout(int sfd, char *data, uint32_t len, uint32_t *recv_bytes
 	}
 
 #if DEBUG_DATA
-	if (len > 0) {
+	if (num_recv > 0) {
 		char *tmp = NULL;
 		if (DEBUG_DATA_HEX && *data != '<') {
-			tmp = str2hexn(data, len);
+			tmp = str2hexn(data, num_recv);
 		} else {
 			// plist here, show as text
-			tmp = (char *)malloc((len+1) * sizeof(char));
-			strncpy(tmp, data, len * sizeof(char));
-			tmp[len] = 0x00;
+			tmp = (char *)malloc((num_recv+1) * sizeof(char));
+			strncpy(tmp, data, num_recv * sizeof(char));
+			tmp[num_recv] = 0x00;
 		}
 		DEBUG(1, "\n======================\nreceived: %d bytes\n%s\n======================\n\n", len, tmp);
 		free(tmp);
