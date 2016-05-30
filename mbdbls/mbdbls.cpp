@@ -11,7 +11,7 @@ size_t GetNext4Byte(char* buff,FILE* file)
 	return fread(buff,1,4,file);
 }
 
-int GetInt(FILE* file,int intsize)
+unsigned int GetInt(FILE* file,int intsize)
 {
 	 //"""Retrieve an integer (big-endian) 
 	if( !file )
@@ -19,8 +19,8 @@ int GetInt(FILE* file,int intsize)
 		return -1;
 	}
 
-	int value = 0;
-	char bytedata = 0;
+	unsigned int value = 0;
+	unsigned char bytedata = 0;
 	while (intsize > 0)
 	{
 		bytedata = 0;
@@ -45,18 +45,21 @@ std::string GetString(FILE* file)
 	char data[2] = {0};
 	char* stringdata = NULL;
 	std::string value;
-	int length = 0;
-	if(fread(&data,1,2,file) <= 0 )
+	unsigned int length = 0;
+	size_t pos = ftell(file);
+	if(fread(&data,1,2,file) != 2 )
 	{
 		return "";
 	}
+	pos = ftell(file);
 
 	if (data[0] ==(char) 0xff && data[1] ==(char) 0xff)
 	{
 		return "";
-	}
-
+	}	
+	pos = ftell(file);
 	fseek(file,-2,SEEK_CUR);
+	pos = ftell(file);
 	length = GetInt(file, 2); //# 2-byte length
 	stringdata = (char*)malloc(length+1);
 	memset(stringdata,0,length+1);
@@ -79,7 +82,7 @@ FILEINFOS process_mbdb_file(char* filename)
 	size_t filesize = 0;
 
 
-	file = fopen(filename,"r");
+	file = fopen(filename,"rb");
 	fseek(file,0,SEEK_END);
 	filesize = ftell(file);
 	fseek(file,0,SEEK_SET);
@@ -97,6 +100,8 @@ FILEINFOS process_mbdb_file(char* filename)
 		while (ftell(file) < filesize)
 		{
 			FILEINFO fileinfo;
+
+			
 			fileinfo.start_offset = ftell(file);
 			fileinfo.domain = GetString(file);
 			fileinfo.filename = GetString(file);
@@ -136,7 +141,29 @@ FILEINFOS process_mbdb_file(char* filename)
 }
 
 //test
-void main()
+void main(int argc, char** argv)
 {
-	process_mbdb_file("S:\\iphonebak\\Manifest.mbdb");
+	FILE *outfile = NULL;
+
+	if (argc <2)
+	{
+		return;
+	}
+	char * filepath = argv[1];
+	outfile = fopen(filepath,"w+");
+	if (outfile == NULL)
+	{
+		return;
+	}
+
+	
+	FILEINFOS fileinfos = process_mbdb_file("S:\\iphonebak\\Manifest.mbdb");
+	for (auto it = fileinfos.begin(); it != fileinfos.end(); it++)
+	{
+		char num[200]={};
+		std::string temp = _itoa(it->second.start_offset,num,10);
+		std::string temp2 = temp + "           "+ it->second.fileID + "        " + it->second.fullpath + "\n";
+		fwrite(temp2.c_str(),temp2.length(),1,outfile);
+	}
+	
 }

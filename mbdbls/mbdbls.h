@@ -11,7 +11,7 @@
 
 
 typedef struct fileinfo_data{
-	size_t start_offset;
+	long start_offset;
 	std::string domain;
 	std::string filename;
 	std::string fullpath;
@@ -20,16 +20,16 @@ typedef struct fileinfo_data{
 	std::string datahash;
 	std::string unknown1;
 	unsigned int mode;
-	int unknown2;
-	int unknown3;
-	int userid;
-	int groupid;
-	int mtime;
-	int atime;
-	int ctime;
-	int filelen;
-	int flag;
-	int numprops;
+	unsigned int unknown2;
+	unsigned int unknown3;
+	unsigned int userid;
+	unsigned int groupid;
+	unsigned int mtime;
+	unsigned int atime;
+	unsigned int ctime;
+	unsigned int filelen;
+	unsigned int flag;
+	unsigned int numprops;
 	std::map<std::string,std::string> properties;
 }FILEINFO;
 
